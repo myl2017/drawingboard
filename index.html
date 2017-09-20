@@ -65,23 +65,25 @@
     canvas.height = clientHeight
     let  previousPoint = null
     canvas.addEventListener('touchmove',function (e) {
-        e.preventDefault()
+        e.preventDefault() //阻止页面滑动...
         let {pageX,pageY} = e.touches[0]
-        let status = document.querySelector('.active').className
-        if(status === 'iconfont pen active'){
-            if(previousPoint){ //(!null===true)
-                context.strokeStyle = 'green'
-                context.beginPath();
-                context.moveTo(previousPoint.pageX,previousPoint.pageY);    //移动到的上一个点
-                context.lineTo(pageX, pageY);                               //移动到的下一个点
-                context.stroke();
+        if(document.querySelector('.active')!== undefined){
+            let status = document.querySelector('.active').className
+            if(status === 'iconfont pen active'){
+                if(previousPoint){ //(!null===true)
+                    context.strokeStyle = 'green'
+                    context.beginPath();
+                    context.moveTo(previousPoint.pageX,previousPoint.pageY);    //移动到的上一个点
+                    context.lineTo(pageX, pageY);                               //移动到的下一个点
+                    context.stroke();
+                }
+                previousPoint = {
+                    "pageX":pageX,
+                    "pageY":pageY
+                } //previousPoint = {pageX,pageY}
+            }else if(status === 'iconfont eraser active'){
+                context.clearRect(pageX-5,pageY-5,20,20)
             }
-            previousPoint = {
-                "pageX":pageX,
-                "pageY":pageY
-            } //previousPoint = {pageX,pageY}
-        }else if(status === 'iconfont eraser active'){
-            context.clearRect(pageX-5,pageY-5,20,20)
         }
     })
     canvas.addEventListener('touchend',function (e) {
