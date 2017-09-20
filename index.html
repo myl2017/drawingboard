@@ -84,6 +84,8 @@
             }else if(status === 'iconfont eraser active'){
                 context.clearRect(pageX-5,pageY-5,20,20)
             }
+        }else{
+            return
         }
     })
     canvas.addEventListener('touchend',function (e) {
