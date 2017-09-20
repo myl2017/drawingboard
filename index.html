@@ -65,7 +65,7 @@
     canvas.height = clientHeight
     let  previousPoint = null
     canvas.addEventListener('touchmove',function (e) {
-        e.preventDefault() //阻止页面滑动...
+        //e.preventDefault() //阻止页面滑动...
         let {pageX,pageY} = e.touches[0]
         if(document.querySelector('.active')!== undefined){
             let status = document.querySelector('.active').className
