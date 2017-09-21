@@ -24,9 +24,9 @@
         body{ overflow: hidden;}
         .actions{ position: fixed; top: 0; left: 0; width: 100%; text-align: center;  padding: 5px; display: flex; justify-content: space-around; }
         .actions .pen{ color: #0BB9A5; }
-        .actions .pen.active{ color: green; font-size: 37px;}
+        .actions .pen.active{ color: green; font-size: 40px;}
         .actions .eraser{ color: #FF69B4; }
-        .actions .eraser.active{ font-size: 37px;}
+        .actions .eraser.active{ font-size: 40px;}
         .actions #clear{ color: #F5A617; }
         .actions #save{ color: #53BCE8; }
         .actions > i.iconfont{ display: block; }
@@ -49,19 +49,8 @@
     canvas.width = clientWidth
     canvas.height = clientHeight
 
-    let pen = document.getElementById('pen')
-    let eraser = document.getElementById('eraser')
-    pen.onclick = function () {
-        pen.classList.add("active");
-        eraser.classList.remove('active')
-    }
-    eraser.onclick = function () {
-        eraser.classList.add('active')
-        pen.classList.remove('active')
-    }
-
     let context = canvas.getContext('2d');
-    let  previousPoint = null
+    let  previousPoint
     canvas.addEventListener('touchmove',function (e) {
         e.preventDefault() //阻止页面滑动等
         let {pageX,pageY} = e.touches[0]
@@ -86,11 +75,17 @@
         previousPoint = null
     })
 
-    let clear = document.getElementById('clear')
+    pen.onclick = function () {
+        pen.classList.add("active");
+        eraser.classList.remove('active')
+    }
+    eraser.onclick = function () {
+        eraser.classList.add('active')
+        pen.classList.remove('active')
+    }
     clear.onclick = function () {
         context.clearRect(0,0,clientWidth,clientHeight)
     }
-    let save = document.getElementById('save')
     save.onclick = function () {
         var data=canvas.toDataURL("image/png");
         var newWindow=window.open('about:blank','image from canvas');
