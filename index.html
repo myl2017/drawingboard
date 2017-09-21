@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -20,28 +20,42 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-
-        .active{
-            font-size:40px;
-            color:green;
-        }
-        *{margin:0;padding:0;}
+        *{ margin: 0; padding: 0;}
         body{
-            overflow:hidden;
+            overflow: hidden;
         }
         .actions{
-            position:fixed;
-            top:0;
-            left:0;
-            width:100%;
-            padding:5px;
-            text-align:center;
-            display:flex;
-            justify-content:center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 5px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .actions .pen{
+            color: #0BB9A5;
+        }
+        .actions .pen.active{
+            color: green;
+            font-size: 40px;
+        }
+        .actions .eraser{
+            color: #FF69B4;
+        }
+        .actions .eraser.active{
+            font-size: 40px;
+        }
+        .actions #clear{
+            color: #F5A617;
+        }
+        .actions #save{
+            color: #53BCE8;
         }
         #canvas{
-            background:#ddd;
-            display:block;
+            display: block;
+            background-color: #ddd;
         }
     </style>
 </head>
@@ -54,53 +68,52 @@
     </div>
     <canvas id="canvas"></canvas>
     <script>
-        let canvas = document.querySelector('#canvas')
-        let clientWidth = document.documentElement.clientWidth         //元素的内部宽度
-        let clientHeight = document.documentElement.clientHeight
+        var canvas = document.querySelector('#canvas')
+        var clientWidth = document.documentElement.clientWidth
+        var clientHeight = document.documentElement.clientHeight
         canvas.width = clientWidth
         canvas.height = clientHeight
-
-        let context = canvas.getContext('2d');
-        let  previousPoint
-        canvas.addEventListener('touchmove',function (e) {
-            e.preventDefault() //阻止页面滑动等
-            let {pageX,pageY} = e.touches[0]
-            let status = document.querySelector('.active').className
-            if(status === 'iconfont pen active'){
-                if(previousPoint){ //(!null===true)
-                    context.strokeStyle = 'green'
-                    context.beginPath();
-                    context.moveTo(previousPoint.pageX,previousPoint.pageY);    //移动到的上一个点
-                    context.lineTo(pageX, pageY);                               //移动到的下一个点
-                    context.stroke();
-                }
-                previousPoint = {
-                    "pageX":pageX,
-                    "pageY":pageY
-                } //previousPoint = {pageX,pageY}
-            }else if(status === 'iconfont eraser active'){
-                context.clearRect(pageX-5,pageY-5,20,20)
-            }
-        })
-        canvas.addEventListener('touchend',function (e) {
-            previousPoint = null
-        })
-
-        pen.onclick = function () {
-            pen.classList.add("active");
+        pen.onclick = function(){
+            pen.classList.add('active')
             eraser.classList.remove('active')
         }
-        eraser.onclick = function () {
+        eraser.onclick = function(){
             eraser.classList.add('active')
             pen.classList.remove('active')
         }
-        clear.onclick = function () {
+
+        var context = canvas.getContext("2d")
+        var previousPoint
+        canvas.addEventListener('touchmove',function(e){
+            e.preventDefault()
+            var {pageX,pageY} = e.touches[0]
+            var status = document.querySelector('.active').className
+            if(status === "iconfont pen active"){
+                if(previousPoint){
+                    context.strokeStyle = "green"
+                    context.beginPath()
+                    context.moveTo(previousPoint.pageX,previousPoint.pageY)
+                    context.lineTo(pageX,pageY)
+                    context.stroke()
+                }
+                previousPoint = {
+                    'pageX':pageX,
+                    'pageY':pageY
+                }
+            }else if(status === "iconfont eraser active"){
+                context.clearRect(pageX - 5, pageY - 5,20,20)
+            }
+        });
+        canvas.addEventListener('touchend',function(){
+            previousPoint = null
+        })
+        clear.onclick = function(){
             context.clearRect(0,0,clientWidth,clientHeight)
         }
-        save.onclick = function () {
-            var data=canvas.toDataURL("image/png");
-            var newWindow=window.open('about:blank','image from canvas');
-            newWindow.document.write("<img src='"+data+"' alt='from canvas'/>");
+        save.onclick = function(){
+            var data = canvas.toDataURL("image/png")
+            var newWindow = window.open('about:blank','image form canvas')
+            newWindow.document.write("<img src ='"+data+"' alt='form canvas' />")
         }
     </script>
 </body>
