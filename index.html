@@ -1,103 +1,73 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>手机画板</title>
-    <style>
-        @font-face {
-            font-family: 'iconfont';
-            src: url('//at.alicdn.com/t/font_421346_3nlb90ab7vf5hfr.eot');
-            src: url('//at.alicdn.com/t/font_421346_3nlb90ab7vf5hfr.eot?#iefix') format('embedded-opentype'),
-            url('//at.alicdn.com/t/font_421346_3nlb90ab7vf5hfr.woff') format('woff'),
-            url('//at.alicdn.com/t/font_421346_3nlb90ab7vf5hfr.ttf') format('truetype'),
-            url('//at.alicdn.com/t/font_421346_3nlb90ab7vf5hfr.svg#iconfont') format('svg');
-        }
-        .iconfont {
-            font-family:"iconfont" !important;
-            font-size:30px;
-            font-style:normal;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        *{ margin: 0; padding: 0;}
-        body{ overflow: hidden;}
-        .actions{ position: fixed; top: 0; left: 0; width: 100%; text-align: center;  padding: 10px; }
-        .actions > .icon-wrapper{  display: flex; justify-content: space-around; }
-        .actions .icon-wrapper .pen{ color: black; }
-        .actions .icon-wrapper .eraser{ color: #FF69B4; }
-        .actions .icon-wrapper .pen.active{ color: green; font-size: 35px; font-weight: bold;}
-        .actions .icon-wrapper .eraser.active{ font-size: 35px; font-weight: bold;}
-        .actions .icon-wrapper #clear{ color: #F5A617; }
-        .actions .icon-wrapper #save{ color: #53BCE8; }
-        .actions > i.iconfont{ display: block; }
-        #canvas{ display: block; background-color: #ddd;}
-    </style>
+  <meta charset="UTF-8">
+  <title></title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <style>
+    *{margin: 0;padding: 0;}
+    ul{
+      list-style: none;
+    }
+    #app{
+      background: #ddd;
+      display: block;
+    }
+    .actions{
+      position: fixed;
+      top: 0;
+      left: 0; 
+      width: 100%;
+      padding: 4px;
+    }
+  </style>
 </head>
 <body>
-    <div class="actions">
-        <div class="icon-wrapper">
-            <i class="iconfont pen active" id="pen">&#xe640;</i>
-            <i class="iconfont eraser" id="eraser"> &#xe600;</i>
-            <i class="iconfont" id="clear">&#xe602;</i>
-            <i class="iconfont" id="save">&#xe612;</i>
-        </div>
-    </div>
-    <div id="test"></div>
-    <canvas id="canvas"></canvas>
-</body>
-<script>
-    let clientWidth = document.documentElement.clientWidth         //元素的内部宽度
-    let clientHeight = document.documentElement.clientHeight
-    document.getElementById('test').innerText = clientWidth +",,"+clientHeight
-    let pen = document.getElementById('pen')
-    let eraser = document.getElementById('eraser')
-    pen.addEventListener('click',function () {
-        pen.classList.add("active");
-        eraser.classList.remove('active')
-    })
-    eraser.addEventListener('click',function (e) {
-        eraser.classList.add('active')
-        pen.classList.remove('active')
-    })
+  <div class="actions">
+    <label><input type="radio" name="penType" value="pen" checked>笔</label>
+    <label><input type="radio" name="penType" value="eraser">橡皮擦</label>
+    <button id="save">保存</button>
+  </div>
+  <canvas id="app"></canvas>
+  <script>
+let canvas = document.querySelector('#app')
+let clientWidth = document.documentElement.clientWidth
+let clientHeight = document.documentElement.clientHeight
+canvas.width = clientWidth
+canvas.height = clientHeight
 
-    let canvas = document.querySelector('#canvas')
-    let context = canvas.getContext('2d');
-    canvas.width = clientWidth
-    canvas.height = clientHeight
-    let  previousPoint = null
-    canvas.addEventListener('touchmove',function (e) {
-        e.preventDefault() //阻止页面滑动等
-        let {pageX,pageY} = e.touches[0]
-        let status = document.querySelector('.active').className
-        if(status === 'iconfont pen active'){
-            if(previousPoint){ //(!null===true)
-                context.strokeStyle = 'green'
-                context.beginPath();
-                context.moveTo(previousPoint.pageX,previousPoint.pageY);    //移动到的上一个点
-                context.lineTo(pageX, pageY);                               //移动到的下一个点
-                context.stroke();
-            }
-            previousPoint = {
-                "pageX":pageX,
-                "pageY":pageY
-            } //previousPoint = {pageX,pageY}
-        }else if(status === 'iconfont eraser active'){
-            context.clearRect(pageX-5,pageY-5,20,20)
-        }
-    })
-    canvas.addEventListener('touchend',function (e) {
-        previousPoint = null
-    })
-    let clear = document.getElementById('clear')
-    clear.onclick = function () {
-        context.clearRect(0,0,clientWidth,clientHeight)
+let context = canvas.getContext("2d");
+let previousPoint
+
+canvas.addEventListener('touchmove', function(e){
+    e.preventDefault()
+
+  let penType = document.querySelector('input[name="penType"]:checked').value
+  let {pageX,pageY}= e.touches[0]
+  if(penType === 'pen'){
+    if(previousPoint){
+      context.strokeStyle = 'green'
+      context.beginPath();
+      context.moveTo(previousPoint.pageX, previousPoint.pageY); // 移动到上一个点
+      context.lineTo(pageX,pageY); // 画线到这一个点
+      context.stroke()
     }
-    let save = document.getElementById('save')
-    save.onclick = function () {
-        var data=canvas.toDataURL("image/png");
-        var newWindow=window.open('about:blank','image from canvas');
-        newWindow.document.write("<img src='"+data+"' alt='from canvas'/>");
-    }
-</script>
+    previousPoint = { pageX, pageY }
+  }else if(penType === 'eraser'){
+    context.clearRect(pageX-5, pageY-5, 10, 10)
+  }
+
+})
+canvas.addEventListener('touchend', function(){
+  previousPoint = null
+})
+
+save.onclick = function(){
+  var canvas=document.getElementById("app");
+  var data=canvas.toDataURL("image/png");
+  var newWindow=window.open('about:blank','image from canvas');
+  newWindow.document.write("<img src='"+data+"' alt='from canvas'/>");
+}
+  </script>
+</body>
 </html>
