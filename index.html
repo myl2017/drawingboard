@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -23,10 +23,10 @@
         *{ margin: 0; padding: 0;}
         body{ overflow: hidden;}
         .actions{ position: fixed; top: 0; left: 0; width: 100%; text-align: center;  padding: 5px; display: flex; justify-content: space-around; }
-        .actions .pen{ color: black; }
+        .actions .pen{ color: #0BB9A5; }
+        .actions .pen.active{ color: green; font-size: 37px;}
         .actions .eraser{ color: #FF69B4; }
-        .actions .pen.active{ color: green; font-size: 35px; font-weight: bold;}
-        .actions .eraser.active{ font-size: 35px; font-weight: bold;}
+        .actions .eraser.active{ color: green; font-size: 37px;}
         .actions #clear{ color: #F5A617; }
         .actions #save{ color: #53BCE8; }
         .actions > i.iconfont{ display: block; }
@@ -40,25 +40,25 @@
         <i class="iconfont" id="clear">&#xe602;</i>
         <i class="iconfont" id="save">&#xe612;</i>
     </div>
-    <canvas id="canvas" width="1536" height="735"></canvas>
+    <canvas id="canvas"></canvas>
 </body>
 <script>
-    let pen = document.getElementById('pen')
-    let eraser = document.getElementById('eraser')
-    pen.addEventListener('click',function () {
-        pen.classList.add("active");
-        eraser.classList.remove('active')
-    })
-    eraser.addEventListener('click',function (e) {
-        eraser.classList.add('active')
-        pen.classList.remove('active')
-    })
-
     let canvas = document.querySelector('#canvas')
     let clientWidth = document.documentElement.clientWidth         //元素的内部宽度
     let clientHeight = document.documentElement.clientHeight
     canvas.width = clientWidth
     canvas.height = clientHeight
+
+    let pen = document.getElementById('pen')
+    let eraser = document.getElementById('eraser')
+    pen.onclick = function () {
+        pen.classList.add("active");
+        eraser.classList.remove('active')
+    }
+    eraser.onclick = function () {
+        eraser.classList.add('active')
+        pen.classList.remove('active')
+    }
 
     let context = canvas.getContext('2d');
     let  previousPoint = null
@@ -85,6 +85,7 @@
     canvas.addEventListener('touchend',function (e) {
         previousPoint = null
     })
+
     let clear = document.getElementById('clear')
     clear.onclick = function () {
         context.clearRect(0,0,clientWidth,clientHeight)
