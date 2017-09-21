@@ -41,55 +41,55 @@
         <i class="iconfont" id="save">&#xe612;</i>
     </div>
     <canvas id="canvas"></canvas>
-</body>
-<script>
-    let canvas = document.querySelector('#canvas')
-    let clientWidth = document.documentElement.clientWidth         //元素的内部宽度
-    let clientHeight = document.documentElement.clientHeight
-    canvas.width = clientWidth
-    canvas.height = clientHeight
+    <script>
+        let canvas = document.querySelector('#canvas')
+        let clientWidth = document.documentElement.clientWidth         //元素的内部宽度
+        let clientHeight = document.documentElement.clientHeight
+        canvas.width = clientWidth
+        canvas.height = clientHeight
 
-    let context = canvas.getContext('2d');
-    let  previousPoint
-    canvas.addEventListener('touchmove',function (e) {
-        e.preventDefault() //阻止页面滑动等
-        let {pageX,pageY} = e.touches[0]
-        let status = document.querySelector('.active').className
-        if(status === 'iconfont pen active'){
-            if(previousPoint){ //(!null===true)
-                context.strokeStyle = 'green'
-                context.beginPath();
-                context.moveTo(previousPoint.pageX,previousPoint.pageY);    //移动到的上一个点
-                context.lineTo(pageX, pageY);                               //移动到的下一个点
-                context.stroke();
+        let context = canvas.getContext('2d');
+        let  previousPoint
+        canvas.addEventListener('touchmove',function (e) {
+            e.preventDefault() //阻止页面滑动等
+            let {pageX,pageY} = e.touches[0]
+            let status = document.querySelector('.active').className
+            if(status === 'iconfont pen active'){
+                if(previousPoint){ //(!null===true)
+                    context.strokeStyle = 'green'
+                    context.beginPath();
+                    context.moveTo(previousPoint.pageX,previousPoint.pageY);    //移动到的上一个点
+                    context.lineTo(pageX, pageY);                               //移动到的下一个点
+                    context.stroke();
+                }
+                previousPoint = {
+                    "pageX":pageX,
+                    "pageY":pageY
+                } //previousPoint = {pageX,pageY}
+            }else if(status === 'iconfont eraser active'){
+                context.clearRect(pageX-5,pageY-5,20,20)
             }
-            previousPoint = {
-                "pageX":pageX,
-                "pageY":pageY
-            } //previousPoint = {pageX,pageY}
-        }else if(status === 'iconfont eraser active'){
-            context.clearRect(pageX-5,pageY-5,20,20)
-        }
-    })
-    canvas.addEventListener('touchend',function (e) {
-        previousPoint = null
-    })
+        })
+        canvas.addEventListener('touchend',function (e) {
+            previousPoint = null
+        })
 
-    pen.onclick = function () {
-        pen.classList.add("active");
-        eraser.classList.remove('active')
-    }
-    eraser.onclick = function () {
-        eraser.classList.add('active')
-        pen.classList.remove('active')
-    }
-    clear.onclick = function () {
-        context.clearRect(0,0,clientWidth,clientHeight)
-    }
-    save.onclick = function () {
-        var data=canvas.toDataURL("image/png");
-        var newWindow=window.open('about:blank','image from canvas');
-        newWindow.document.write("<img src='"+data+"' alt='from canvas'/>");
-    }
-</script>
+        pen.onclick = function () {
+            pen.classList.add("active");
+            eraser.classList.remove('active')
+        }
+        eraser.onclick = function () {
+            eraser.classList.add('active')
+            pen.classList.remove('active')
+        }
+        clear.onclick = function () {
+            context.clearRect(0,0,clientWidth,clientHeight)
+        }
+        save.onclick = function () {
+            var data=canvas.toDataURL("image/png");
+            var newWindow=window.open('about:blank','image from canvas');
+            newWindow.document.write("<img src='"+data+"' alt='from canvas'/>");
+        }
+    </script>
+</body>
 </html>
