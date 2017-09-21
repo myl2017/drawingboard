@@ -24,9 +24,9 @@
         body{ overflow: hidden;}
         .actions{ position: fixed; top: 0; left: 0; width: 100%; text-align: center;  padding: 10px; }
         .actions > .icon-wrapper{  display: flex; justify-content: space-around; }
-        .actions .icon-wrapper #pen{  color: green; }
-        .actions .icon-wrapper #eraser{ color: #FF69B4; }
-        .actions .icon-wrapper .pen.active{ font-size: 35px; font-weight: bold;}
+        .actions .icon-wrapper .pen{ color: black; }
+        .actions .icon-wrapper .eraser{ color: #FF69B4; }
+        .actions .icon-wrapper .pen.active{ color: green; font-size: 35px; font-weight: bold;}
         .actions .icon-wrapper .eraser.active{ font-size: 35px; font-weight: bold;}
         .actions .icon-wrapper #clear{ color: #F5A617; }
         .actions .icon-wrapper #save{ color: #53BCE8; }
@@ -37,7 +37,7 @@
 <body>
     <div class="actions">
         <div class="icon-wrapper">
-            <i class="iconfont pen" id="pen">&#xe640;</i>
+            <i class="iconfont pen active" id="pen">&#xe640;</i>
             <i class="iconfont eraser" id="eraser"> &#xe600;</i>
             <i class="iconfont" id="clear">&#xe602;</i>
             <i class="iconfont" id="save">&#xe612;</i>
@@ -65,27 +65,23 @@
     canvas.height = clientHeight
     let  previousPoint = null
     canvas.addEventListener('touchmove',function (e) {
-        e.preventDefault() //阻止页面滑动...
+        e.preventDefault() //阻止页面滑动等
         let {pageX,pageY} = e.touches[0]
-        if(document.querySelector('.active')!== undefined){
-            let status = document.querySelector('.active').className
-            if(status === 'iconfont pen active'){
-                if(previousPoint){ //(!null===true)
-                    context.strokeStyle = 'green'
-                    context.beginPath();
-                    context.moveTo(previousPoint.pageX,previousPoint.pageY);    //移动到的上一个点
-                    context.lineTo(pageX, pageY);                               //移动到的下一个点
-                    context.stroke();
-                }
-                previousPoint = {
-                    "pageX":pageX,
-                    "pageY":pageY
-                } //previousPoint = {pageX,pageY}
-            }else if(status === 'iconfont eraser active'){
-                context.clearRect(pageX-5,pageY-5,20,20)
+        let status = document.querySelector('.active').className
+        if(status === 'iconfont pen active'){
+            if(previousPoint){ //(!null===true)
+                context.strokeStyle = 'green'
+                context.beginPath();
+                context.moveTo(previousPoint.pageX,previousPoint.pageY);    //移动到的上一个点
+                context.lineTo(pageX, pageY);                               //移动到的下一个点
+                context.stroke();
             }
-        }else{
-            return
+            previousPoint = {
+                "pageX":pageX,
+                "pageY":pageY
+            } //previousPoint = {pageX,pageY}
+        }else if(status === 'iconfont eraser active'){
+            context.clearRect(pageX-5,pageY-5,20,20)
         }
     })
     canvas.addEventListener('touchend',function (e) {
